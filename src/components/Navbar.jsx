@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import { Menu, X, LogIn } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
-    { label: 'Home', href: '#home' },
-    { label: 'AI Plant Doctor', href: '#features' },
+    { label: 'Home', href: '/' },
+    { label: 'AI Plant Doctor', href: '/plant-doctor' },
     { label: 'Weather', href: '#weather' },
     { label: 'Products', href: '#store' },
     { label: 'About', href: '#about' },
     { label: 'Contact', href: '#contact' },
   ];
+
+  const isLink = (href) => href.startsWith('/');
 
   return (
     <motion.nav
@@ -28,21 +32,32 @@ export default function Navbar() {
             whileHover={{ scale: 1.05 }}
             className="flex items-center space-x-2 cursor-pointer"
           >
-            <span className="text-3xl">🌿</span>
-            <span className="text-2xl font-bold gradient-text">KrishiMitra AI</span>
+            <Link to="/" className="flex items-center space-x-2">
+              <span className="text-3xl">🌿</span>
+              <span className="text-2xl font-bold gradient-text">KrishiMitra AI</span>
+            </Link>
           </motion.div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item, index) => (
-              <motion.a
-                key={index}
-                href={item.href}
-                whileHover={{ color: '#22c55e' }}
-                className="text-gray-200 hover:text-green-400 transition-colors"
-              >
-                {item.label}
-              </motion.a>
+              <motion.div key={index} whileHover={{ color: '#22c55e' }}>
+                {isLink(item.href) ? (
+                  <Link
+                    to={item.href}
+                    className="text-gray-200 hover:text-green-400 transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={item.href}
+                    className="text-gray-200 hover:text-green-400 transition-colors"
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </motion.div>
             ))}
           </div>
 
@@ -76,14 +91,25 @@ export default function Navbar() {
             className="md:hidden pb-6 space-y-3"
           >
             {navItems.map((item, index) => (
-              <a
-                key={index}
-                href={item.href}
-                className="block text-gray-200 hover:text-green-400 py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </a>
+              <div key={index}>
+                {isLink(item.href) ? (
+                  <Link
+                    to={item.href}
+                    className="block text-gray-200 hover:text-green-400 py-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={item.href}
+                    className="block text-gray-200 hover:text-green-400 py-2"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.label}
+                  </a>
+                )}
+              </div>
             ))}
             <button className="w-full flex items-center justify-center space-x-2 px-4 py-2 border-2 border-green-400 text-green-400 rounded-lg hover:bg-green-400/10">
               <LogIn size={18} />
